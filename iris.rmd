@@ -1,0 +1,94 @@
+---
+title: "iris with r"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r cars}
+library(datasets)
+data(iris)
+summary(iris)
+```
+
+
+```{r}
+names(iris) <- tolower(names(iris))
+library(dplyr)
+
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+virginica<-filter(iris,species=='virginica')
+tail(virginica,10)
+```
+```{r}
+sepalLength6 <- subset(iris, species == "virginica", sepal.length > 6)
+tail(sepalLength6) # compare this to head()
+```
+
+```{r}
+selected <- select(iris, sepal.length, petal.length)
+# select all columns from sepal.length to petal.length
+selected2 <- select(iris, sepal.length:petal.length)
+head(selected, 3)
+head(selected2,3)
+```
+
+```{r}
+#mutate is used to create new variables from datasets
+newcol<-mutate(iris,greater_half=sepal.width>0.5*sepal.length)
+tail(newcol)
+```
+
+```{r}
+#how many satisfy this condition
+sum(newcol$greater_half)
+```
+```{r}
+#arrange helps to arrange in particular order(default=ascending order)
+arr.virg <- newcol %>% filter(species == "virginica") %>%
+  arrange(sepal.width)
+arr.virg[20:30,] 
+```
+```{r}
+#find the mean of sepal length by removing the null or NANs for virginica species
+summarise(arr.virg, mean.length = mean(sepal.length, na.rm = TRUE))
+
+```
+```{r}
+plot(iris$sepal.width, iris$sepal.length)
+```
+
+```{r}
+hist(iris$sepal.length)
+```
+```{r}
+# split input and output
+x <- iris[,1:4]
+y <- iris[,5]
+```
+
+```{r}
+#univariate plots
+par(mfrow=c(1,4))
+  for(i in 1:4) {
+  boxplot(x[,i], main=names(iris)[i])
+}
+```
+```{r}
+#multivariate plots
+library(caret)
+featurePlot(x = x, 
+            y = y, 
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = 3))
+```
+
