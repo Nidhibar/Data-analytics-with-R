@@ -1,0 +1,58 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+#from long to wide
+library(tidyverse)
+df <- read.csv('jan17Items.csv',stringsAsFactors=F)
+df_long<-df %>% select(4,5,14,15)
+df_long
+```
+
+```{r}
+df_wide<-df_long %>% pivot_wider(id_cols=c(LineItem,Price) ,names_from=CashierName,values_from=Quantity)
+df_wide
+```
+
+```{r}
+library(stringr)
+df$LineItem_len<-str_length(df$LineItem)
+
+low<-str_to_lower(df$LineItem) #similarly str_to_upper
+
+#Detect/find all items that have beef in them and return boolean values
+beef_items<-str_detect(df$LineItem,"Beef")
+unique(df[beef_items,]$LineItem)
+
+```
+
+
+```{r}
+#if we need to know items which dont have 'Salmon' in them
+non_salmon_items<-str_detect(df$LineItem,"Salmon",negate=T)
+unique(df[non_salmon_items,]$LineItem)
+
+```
+```{r}
+#string replace
+strin<-"Wohoo! I like this course"
+str_replace(strin,"like","love")
+```
+
+
+```{r}
+#str_split function to split the string with required character
+split1<-str_split(strin,pattern=" ")
+print(split1)
+split2<-str_split(strin,pattern="")
+print(split2)
+```
+
+```{r}
+
+split2
+```
+
